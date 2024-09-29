@@ -404,7 +404,7 @@ function ssesolve(
 
     return TimeEvolutionSSESol(
         n_traj,
-        _sol_1.t,
+        _sol_1.prob.kwargs[:t_l],
         states,
         expvals,
         expvals_all,

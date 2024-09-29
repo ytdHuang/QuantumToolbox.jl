@@ -537,7 +537,7 @@ function mcsolve(
 
     return TimeEvolutionMCSol(
         n_traj,
-        times,
+        _sol_1.prob.kwargs[:t_l],
         states,
         expvals,
         expvals_all,
