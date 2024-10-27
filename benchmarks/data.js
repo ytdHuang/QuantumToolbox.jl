@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729816997056,
+  "lastUpdate": 1730020344429,
   "repoUrl": "https://github.com/ytdHuang/QuantumToolbox.jl",
   "entries": {
     "Benchmark Results": [
@@ -2016,6 +2016,90 @@ window.BENCHMARK_DATA = {
             "value": 125487377,
             "unit": "ns",
             "extra": "gctime=0\nmemory=4941008\nallocs=66932\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "44385685+ytdHuang@users.noreply.github.com",
+            "name": "Yi-Te Huang",
+            "username": "ytdHuang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b5ce558695260b2b38030ee826fa7cbd1541ccac",
+          "message": "bump version to `0.19.0`",
+          "timestamp": "2024-10-25T21:28:36+09:00",
+          "tree_id": "0549731c76f77f3e3153a6c5c9636491b961190e",
+          "url": "https://github.com/ytdHuang/QuantumToolbox.jl/commit/b5ce558695260b2b38030ee826fa7cbd1541ccac"
+        },
+        "date": 1730020343973,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "Steadystate/Direct",
+            "value": 6956159.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=10730792\nallocs=477\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "Eigenvalues/eigenstates/dense",
+            "value": 599831548.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=20091440\nallocs=37\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "Eigenvalues/eigenstates/sparse",
+            "value": 67948507,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=3660592\nallocs=369\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "Correlations and Spectrum/FFT Correlation",
+            "value": 13945517,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=1346568\nallocs=2760\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "Correlations and Spectrum/Exponential Series",
+            "value": 42325552,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4809216\nallocs=1023\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "Time Evolution/Dynamical Fock Dimension",
+            "value": 2110213513.5,
+            "unit": "ns",
+            "extra": "gctime=730855252.5\nmemory=3504117648\nallocs=302381\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "Time Evolution/time-independent/sesolve",
+            "value": 4458255,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=147408\nallocs=2136\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "Time Evolution/time-independent/mesolve",
+            "value": 26879663.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=3686176\nallocs=879\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "Time Evolution/time-independent/mcsolve/Serial",
+            "value": 247580124,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4943952\nallocs=67179\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "Time Evolution/time-independent/mcsolve/Multithreaded",
+            "value": 125284123,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4943440\nallocs=67084\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
         ]
       }
