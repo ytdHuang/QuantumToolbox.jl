@@ -361,6 +361,8 @@ function steadystate_fourier(
     check_dimensions(H_0, H_p, H_m)
 
     L_0 = liouvillian(H_0, c_ops)
+    (L_0 isa QuantumObject) || throw(ArgumentError("steadystate_fourier only supports (time-independent) QuantumObject in c_ops"))
+
     L_p = liouvillian(H_p)
     L_m = liouvillian(H_m)
     return _steadystate_fourier(L_0, L_p, L_m, ωd, solver; n_max = n_max, tol = tol, kwargs...)
