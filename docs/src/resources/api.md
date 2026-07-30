@@ -1,3 +1,34 @@
+# [API](@id doc-API)
+
+**Table of contents**
+
+[[toc]] <!-- the level setting is in ".vitepress/config.mts" -->
+
+## [QuantumToolboxCore](@id doc-API:QuantumToolboxCore)
+
+```@meta
+CurrentModule = QuantumToolboxCore
+
+DocTestSetup = quote
+    using QuantumToolboxCore
+end
+```
+
+```@docs
+settings
+versioninfo
+about
+cite
+meshgrid
+AbstractLinearMap
+gaussian
+n_thermal
+PhysicalConstants
+convert_unit
+```
+
+## [QuantumToolbox](@id doc-API:QuantumToolbox)
+
 ```@meta
 CurrentModule = QuantumToolbox
 
@@ -8,22 +39,23 @@ DocTestSetup = quote
 end
 ```
 
-# [API](@id doc-API)
-
-**Table of contents**
-
-[[toc]] <!-- the level setting is in ".vitepress/config.mts" -->
-
-## [Quantum object (Qobj) and type](@id doc-API:Quantum-object-and-type)
+### [Dimensions](@id doc-API:Dimensions)
 
 ```@docs
 Dimensions
+get_size
 AbstractSpace
 AbstractSuperSpace
 Space
 TensorSpace
 LiouvilleSpace
 EnrSpace
+enr_state_dictionaries
+```
+
+### [Quantum object (Qobj) and type](@id doc-API:Quantum-object-and-type)
+
+```@docs
 AbstractQuantumObject
 Bra
 Ket
@@ -39,7 +71,7 @@ Base.length
 SciMLOperators.cache_operator
 ```
 
-## [Qobj boolean functions](@id doc-API:Qobj-boolean-functions)
+### [Qobj boolean functions](@id doc-API:Qobj-boolean-functions)
 
 ```@docs
 isbra
@@ -57,7 +89,7 @@ SciMLOperators.iscached
 SciMLOperators.isconstant
 ```
 
-## [Qobj arithmetic and attributes](@id doc-API:Qobj-arithmetic-and-attributes)
+### [Qobj arithmetic and attributes](@id doc-API:Qobj-arithmetic-and-attributes)
 
 ```@docs
 Base.zero
@@ -89,7 +121,7 @@ get_coherence
 partial_transpose
 ```
 
-## [Qobj eigenvalues and eigenvectors](@id doc-API:Qobj-eigenvalues-and-eigenvectors)
+### [Qobj eigenvalues and eigenvectors](@id doc-API:Qobj-eigenvalues-and-eigenvectors)
 
 ```@docs
 EigsolveResult
@@ -101,7 +133,7 @@ eigsolve
 eigsolve_al
 ```
 
-## [Qobj manipulation](@id doc-API:Qobj-manipulation)
+### [Qobj manipulation](@id doc-API:Qobj-manipulation)
 
 ```@docs
 ket2dm
@@ -115,7 +147,7 @@ vec2mat
 mat2vec
 ```
 
-## [Generate states and operators](@id doc-API:Generate-states-and-operators)
+### [Generate states and operators](@id doc-API:Generate-states-and-operators)
 
 ```@docs
 zero_ket
@@ -173,7 +205,7 @@ sprepost
 lindblad_dissipator
 ```
 
-## [Synonyms of functions for Qobj](@id doc-API:Synonyms-of-functions-for-Qobj)
+### [Synonyms of functions for Qobj](@id doc-API:Synonyms-of-functions-for-Qobj)
 ```@docs
 Qobj
 QobjEvo
@@ -197,7 +229,7 @@ qeye_like
 qzero_like
 ```
 
-## [Time evolution](@id doc-API:Time-evolution)
+### [Time evolution](@id doc-API:Time-evolution)
 
 ```@docs
 TimeEvolutionProblem
@@ -230,7 +262,7 @@ brterm
 brmesolve
 ```
 
-### [Steady State Solvers](@id doc-API:Steady-State-Solvers)
+#### [Steady State Solvers](@id doc-API:Steady-State-Solvers)
 
 ```@docs
 steadystate
@@ -242,14 +274,14 @@ SteadyStateODESolver
 SSFloquetEffectiveLiouvillian
 ```
 
-### [Dynamical Shifted Fock method](@id doc-API:Dynamical-Shifted-Fock-method)
+#### [Dynamical Shifted Fock method](@id doc-API:Dynamical-Shifted-Fock-method)
 
 ```@docs
 dsf_mesolve
 dsf_mcsolve
 ```
 
-### [Low-rank time evolution](@id doc-API:Low-rank-time-evolution)
+#### [Low-rank time evolution](@id doc-API:Low-rank-time-evolution)
 
 ```@docs
 TimeEvolutionLRSol
@@ -257,7 +289,7 @@ lr_mesolveProblem
 lr_mesolve
 ```
 
-## [Correlations and Spectrum](@id doc-API:Correlations-and-Spectrum)
+### [Correlations and Spectrum](@id doc-API:Correlations-and-Spectrum)
 
 ```@docs
 correlation_3op_2t
@@ -271,7 +303,7 @@ PseudoInverse
 Lanczos
 ```
 
-## [Entropy and Metrics](@id doc-API:Entropy-and-Metrics)
+### [Entropy and Metrics](@id doc-API:Entropy-and-Metrics)
 
 ```@docs
 entropy_vn
@@ -290,52 +322,27 @@ bures_dist
 bures_angle
 ```
 
-## [Spin Lattice](@id doc-API:Spin-Lattice)
+### [Spin Lattice](@id doc-API:Spin-Lattice)
 
 ```@docs
 Lattice
 DissipativeIsing
 ```
 
-## [Symmetries and Block Diagonalization](@id doc-API:Symmetries-and-Block-Diagonalization)
+### [Symmetries and Block Diagonalization](@id doc-API:Symmetries-and-Block-Diagonalization)
 
 ```@docs
 block_diagonal_form
 BlockDiagonalForm
 ```
 
-## [Miscellaneous](@id doc-API:Miscellaneous)
+### [Miscellaneous](@id doc-API:Miscellaneous)
 
 ```@docs
 wigner
 ```
 
-## [Linear Maps](@id doc-API:Linear-Maps)
-
-```@docs
-AbstractLinearMap
-```
-
-## [Utility functions](@id doc-API:Utility-functions)
-
-```@docs
-QuantumToolbox.settings
-QuantumToolbox.versioninfo
-QuantumToolbox.about
-QuantumToolbox.pkginfo
-QuantumToolbox.sysinfo
-QuantumToolbox.cite
-gaussian
-n_thermal
-PhysicalConstants
-convert_unit
-row_major_reshape
-get_size
-meshgrid
-enr_state_dictionaries
-```
-
-## [Visualization](@id doc-API:Visualization)
+### [Visualization](@id doc-API:Visualization)
 
 ```@docs
 plot_wigner
@@ -344,7 +351,7 @@ matrix_heatmap
 matrix_histogram
 ```
 
-### [Bloch Sphere](@id doc-API:Bloch-Sphere)
+#### [Bloch Sphere](@id doc-API:Bloch-Sphere)
 
 ```@docs
 Bloch
