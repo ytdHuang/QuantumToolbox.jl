@@ -15,13 +15,29 @@ using QuantumToolbox
     Nτ = 8
     tlist = range(0, Nt, length = Nt)
     τlist = range(0, Nτ, length = Nτ)
+    time_cutoff = 5.0 # exclude the cases where t + τ > time_cutoff
     A = a'
     B = a' * a
     C = a
-    g2_corr1 = correlation_3op_2t(H, ρss, tlist, τlist, c_ops, A, B, C; progress_bar = Val(false), matrix_form = Val(false))
-    g2_corr2 = correlation_3op_2t(H, ρss, tlist, τlist, c_ops, A, B, C; progress_bar = Val(false), matrix_form = Val(true))
-    @test size(g2_corr1) == size(g2_corr2) == (Nt, Nτ)
+    g2_corr1 = correlation_3op_2t(H, ρss, tlist, τlist, c_ops, A, B, C; progress_bar = Val(false), matrix_form = Val(false), max_t_plus_tau = nothing)
+    g2_corr2 = correlation_3op_2t(H, ρss, tlist, τlist, c_ops, A, B, C; progress_bar = Val(false), matrix_form = Val(true), max_t_plus_tau = nothing)
+    g2_cut_1 = correlation_3op_2t(H, ρss, tlist, τlist, c_ops, A, B, C; progress_bar = Val(false), matrix_form = Val(false), max_t_plus_tau = time_cutoff)
+    g2_cut_2 = correlation_3op_2t(H, ρss, tlist, τlist, c_ops, A, B, C; progress_bar = Val(false), matrix_form = Val(true), max_t_plus_tau = time_cutoff)
+    @test size(g2_corr1) == size(g2_corr2) == size(g2_cut_1) == size(g2_cut_2) == (Nt, Nτ)
     @test all(g2_corr1 .≈ g2_corr2)
+    @test all(g2_cut_1 .≈ g2_cut_2)
+    for (i, t) in enumerate(tlist)
+        for (j, τ) in enumerate(τlist)
+            if t + τ > time_cutoff
+                @test g2_cut1[i, j] == g2_cut2[i, j] == 0 # exact zero
+            else
+                # atol accounts for the exact t + τ == cutoff boundary, where the adaptive solver takes a
+                # slightly different step sequence depending on whether it's the trajectory's own endpoint (cutoff boundary) or an interior point (full computation)
+                @test isapprox(g2_cut1[i, j], g2_corr1[i, j]; atol = 1.0e-5)
+                @test isapprox(g2_cut2[i, j], g2_corr1[i, j]; atol = 1.0e-5)
+            end
+        end
+    end
 
     # consistency check between correlation function and spectrum
     t_l = range(0, 333 * π, length = 1000)
@@ -79,6 +95,9 @@ using QuantumToolbox
     t_fft_wrong = [0, 1, 10]
     t_wrong1 = [1, 2, 3]
     t_wrong2 = [-1, 0, 1]
+    max_t_plus_tau_wrong = -1.0
+    L_matrix_form = liouvillian(H, c_ops; matrix_form = Val(true))
+    H_t = QobjEvo(H, (p, t) -> t)
     @test_throws ArgumentError spectrum_correlation_fft(t_fft_wrong, corr1)
     @test_throws ArgumentError correlation_3op_2t(H, nothing, t_l, t_wrong1, c_ops, Id, a', a)
     @test_throws ArgumentError correlation_3op_2t(H, nothing, t_l, t_wrong2, c_ops, Id, a', a)
@@ -88,6 +107,8 @@ using QuantumToolbox
     @test_throws ArgumentError correlation_3op_2t(H, nothing, t_wrong1, t_wrong2, c_ops, Id, a', a)
     @test_throws ArgumentError correlation_3op_2t(H, nothing, t_wrong2, t_wrong1, c_ops, Id, a', a)
     @test_throws ArgumentError correlation_3op_2t(H, nothing, t_wrong2, t_wrong2, c_ops, Id, a', a)
+    @test_throws ArgumentError correlation_3op_2t(L_matrix_form, nothing, t_l, t_l, c_ops, Id, a', a; max_t_plus_tau = max_t_plus_tau_wrong)
+    @test_throws ArgumentError correlation_3op_2t(H_t, nothing, t_l, t_l, c_ops, Id, a', a)
 
     @testset "Deprecated Errors and Warnings" begin
         ρ0 = rand_dm(N)

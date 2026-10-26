@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `ensemblealg`, `matrix_form`, and `max_t_plus_tau` keyword arguments to the two-time correlation functions ([#801]):
   - The `τ`-evolution starting from every `t` is now solved with `mesolve_map` in parallel.
   - `matrix_form` allows matrix form support instead of vectorizing the density matrices. 
+  - Add keyword argument `max_t_plus_tau` to align with `qutip` (python).
 
 ## [v0.51.1]
 Release date: 2026-10-16
