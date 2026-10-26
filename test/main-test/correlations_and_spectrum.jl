@@ -29,12 +29,12 @@ using QuantumToolbox
     for (i, t) in enumerate(tlist)
         for (j, τ) in enumerate(τlist)
             if t + τ > time_cutoff
-                @test g2_cut1[i, j] == g2_cut2[i, j] == 0 # exact zero
+                @test g2_cut_1[i, j] == g2_cut_2[i, j] == 0 # exact zero
             else
                 # atol accounts for the exact t + τ == cutoff boundary, where the adaptive solver takes a
                 # slightly different step sequence depending on whether it's the trajectory's own endpoint (cutoff boundary) or an interior point (full computation)
-                @test isapprox(g2_cut1[i, j], g2_corr1[i, j]; atol = 1.0e-5)
-                @test isapprox(g2_cut2[i, j], g2_corr1[i, j]; atol = 1.0e-5)
+                @test isapprox(g2_cut_1[i, j], g2_corr1[i, j]; atol = 1.0e-5)
+                @test isapprox(g2_cut_2[i, j], g2_corr1[i, j]; atol = 1.0e-5)
             end
         end
     end
