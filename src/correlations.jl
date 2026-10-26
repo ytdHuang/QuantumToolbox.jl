@@ -17,11 +17,15 @@ end
         A::QuantumObject,
         B::QuantumObject,
         C::QuantumObject;
-        kwargs...)
+        ensemblealg::EnsembleAlgorithm = EnsembleThreads(),
+        kwargs...
+    )
 
 Returns the two-time correlation function of three operators ``\hat{A}``, ``\hat{B}`` and ``\hat{C}``: ``\left\langle \hat{A}(t) \hat{B}(t + \tau) \hat{C}(t) \right\rangle`` for a given initial state ``|\psi_0\rangle``.
 
 If the initial state `ψ0` is given as `nothing`, then the [`steadystate`](@ref) will be used as the initial state. Note that this is only implemented if `H` is constant ([`QuantumObject`](@ref)).
+
+The ``\tau``-evolution starting from every `t` in `tlist` is solved together as a single [`mesolve_map`](@ref), and `ensemblealg` (default to `EnsembleThreads()`) controls how that ensemble is parallelized.
 """
 function correlation_3op_2t(
         H::AbstractQuantumObject{HOpType},
@@ -32,6 +36,7 @@ function correlation_3op_2t(
         A::QuantumObject{Operator},
         B::QuantumObject{Operator},
         C::QuantumObject{Operator};
+        ensemblealg::EnsembleAlgorithm = EnsembleThreads(),
         kwargs...,
     ) where {HOpType <: Union{Operator, SuperOperator}, StateOpType <: Union{Ket, Operator}}
     # check tlist and τlist
@@ -56,7 +61,10 @@ function correlation_3op_2t(
     ρt_list = (tlist == [0]) ? [ρ0_vec] : mesolve(L, ρ0_vec, tlist; kwargs2...).states
 
     C_A = sprepost(C, A)
-    corr = map((t, ρt) -> mesolve(L, C_A * ρt, τlist .+ t, e_ops = [B]; kwargs...).expect[1, :], tlist, ρt_list)
+    ρ_τ0_list = map(ρt -> C_A * ρt, ρt_list)
+
+    sols = mesolve_map(L, ρ_τ0_list, τlist; e_ops = [B], ensemblealg = ensemblealg, kwargs...)
+    corr = map(sol -> sol.expect[1, :], sols)
 
     # make the output correlation Matrix align with QuTiP
     # 1st dimension corresponds to tlist
@@ -72,7 +80,8 @@ end
         A::QuantumObject,
         B::QuantumObject,
         C::QuantumObject;
-        kwargs...)
+        kwargs...
+    )
 
 Returns the two-time correlation function (with only one time coordinate ``\tau``) of three operators ``\hat{A}``, ``\hat{B}`` and ``\hat{C}``: ``\left\langle \hat{A}(0) \hat{B}(\tau) \hat{C}(0) \right\rangle`` for a given initial state ``|\psi_0\rangle``.
 
@@ -88,7 +97,8 @@ function correlation_3op_1t(
         C::QuantumObject{Operator};
         kwargs...,
     ) where {HOpType <: Union{Operator, SuperOperator}, StateOpType <: Union{Ket, Operator}}
-    corr = correlation_3op_2t(H, ψ0, [0], τlist, c_ops, A, B, C; kwargs...)
+    # there is only a single t = 0, so the underlying mesolve_map ensemble has just one trajectory
+    corr = correlation_3op_2t(H, ψ0, [0], τlist, c_ops, A, B, C; ensemblealg = EnsembleSerial(), kwargs...)
 
     return corr[1, :] # 1 means tlist[1] = 0
 end
@@ -102,13 +112,17 @@ end
         A::QuantumObject,
         B::QuantumObject;
         reverse::Bool=false,
-        kwargs...)
+        ensemblealg::EnsembleAlgorithm = EnsembleThreads(),
+        kwargs...
+    )
 
 Returns the two-time correlation function of two operators ``\hat{A}`` and ``\hat{B}`` : ``\left\langle \hat{A}(t + \tau) \hat{B}(t) \right\rangle`` for a given initial state ``|\psi_0\rangle``.
 
 If the initial state `ψ0` is given as `nothing`, then the [`steadystate`](@ref) will be used as the initial state. Note that this is only implemented if `H` is constant ([`QuantumObject`](@ref)).
 
 When `reverse=true`, the correlation function is calculated as ``\left\langle \hat{A}(t) \hat{B}(t + \tau) \right\rangle``.
+
+The ``\tau``-evolution starting from every `t` in `tlist` is solved together as a single [`mesolve_map`](@ref) (see [`correlation_3op_2t`](@ref)), and `ensemblealg` (default to `EnsembleThreads()`) controls how that ensemble is parallelized.
 """
 function correlation_2op_2t(
         H::AbstractQuantumObject{HOpType},
@@ -119,13 +133,14 @@ function correlation_2op_2t(
         A::QuantumObject{Operator},
         B::QuantumObject{Operator};
         reverse::Bool = false,
+        ensemblealg::EnsembleAlgorithm = EnsembleThreads(),
         kwargs...,
     ) where {HOpType <: Union{Operator, SuperOperator}, StateOpType <: Union{Ket, Operator}}
     C = eye(get_size(A.dimensions)[1], type = Operator(), dims = A.dims) # same as qeye_like(A), use A instead of H (cause H might be SuperOperator)
     if reverse
-        corr = correlation_3op_2t(H, ψ0, tlist, τlist, c_ops, A, B, C; kwargs...)
+        corr = correlation_3op_2t(H, ψ0, tlist, τlist, c_ops, A, B, C; ensemblealg = ensemblealg, kwargs...)
     else
-        corr = correlation_3op_2t(H, ψ0, tlist, τlist, c_ops, C, A, B; kwargs...)
+        corr = correlation_3op_2t(H, ψ0, tlist, τlist, c_ops, C, A, B; ensemblealg = ensemblealg, kwargs...)
     end
 
     return corr
@@ -157,7 +172,8 @@ function correlation_2op_1t(
         reverse::Bool = false,
         kwargs...,
     ) where {HOpType <: Union{Operator, SuperOperator}, StateOpType <: Union{Ket, Operator}}
-    corr = correlation_2op_2t(H, ψ0, [0], τlist, c_ops, A, B; reverse = reverse, kwargs...)
+    # there is only a single t = 0, so the underlying mesolve_map ensemble has just one trajectory
+    corr = correlation_2op_2t(H, ψ0, [0], τlist, c_ops, A, B; reverse = reverse, ensemblealg = EnsembleSerial(), kwargs...)
 
     return corr[1, :] # 1 means tlist[1] = 0
 end

@@ -1,3 +1,4 @@
+#!PTR_MULTITHREAD
 using Test
 using QuantumToolbox
 
