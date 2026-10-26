@@ -8,7 +8,22 @@ using QuantumToolbox
     a = destroy(N)
     H = a' * a
     c_ops = [sqrt(0.1 * (0.01 + 1)) * a, sqrt(0.1 * (0.01)) * a']
+    ρss = steadystate(H, c_ops)
 
+    # test correlation_3op_2t (calculate g² correlations)
+    Nt = 10
+    Nτ = 8
+    tlist = range(0, Nt, length = Nt)
+    τlist = range(0, Nτ, length = Nτ)
+    A = a'
+    B = a' * a
+    C = a
+    g2_corr1 = correlation_3op_2t(H, ρss, tlist, τlist, c_ops, A, B, C; progress_bar = Val(false), matrix_form = Val(false))
+    g2_corr2 = correlation_3op_2t(H, ρss, tlist, τlist, c_ops, A, B, C; progress_bar = Val(false), matrix_form = Val(true))
+    @test size(g2_corr1) == size(g2_corr2) == (Nt, Nτ)
+    @test all(g2_corr1 .≈ g2_corr2)
+
+    # consistency check between correlation function and spectrum
     t_l = range(0, 333 * π, length = 1000)
     corr1 = correlation_2op_1t(H, nothing, t_l, c_ops, a', a; progress_bar = Val(false))
     corr2 = correlation_3op_1t(H, nothing, t_l, c_ops, Id, a', a; progress_bar = Val(false))
